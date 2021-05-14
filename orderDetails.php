@@ -6,7 +6,7 @@ $results =[];
 
 if (isset($_GET["id"])) {
     $id = $_GET["id"];
-      $stmt = $db->prepare("SELECT OrderItems.product_id, OrderItems.quantity, (Products.price * OrderItems.quantity) as sub, Products.name, Products.description, Products.price from OrderItems JOIN Products on Products.id=OrderItems.product_id WHERE OrderItems.order_id = :id AND Products.visibility = 1");
+      $stmt = $db->prepare("SELECT ordersItems.product_id,ordersItems.quantity, (Products.price * ordersItems.quantity) as sub, Products.name, Products.description, Products.price from ordersItems JOIN Products on Products.id=ordersItems.product_id WHERE ordersItems.order_id = :id AND Products.visibility = 1");
 
     $r = $stmt->execute([":id" => $id]);
     if ($r) {

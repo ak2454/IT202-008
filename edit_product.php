@@ -72,7 +72,7 @@ if(isset($id)){
 	<input type="number" min="1" name="quantity" value = "<?php echo $result["quantity"];?>"/>
 
 	<label>price</label>
-	<input type="number" min="1" name="price" value = "<?php echo $result["price"];?>"/>
+	<input type="number" min="1" step = "0.01" name="price" value = "<?php echo $result["price"];?>"/>
 
 	<label>description</label>
 	<input type="TEXT"  name="description" value = "<?php echo $result["description"];?>"/>

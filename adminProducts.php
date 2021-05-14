@@ -12,19 +12,22 @@ $cat = 0;
 
 $quantity = extractData("quantity");
 $query = "SELECT id,name, price, description, quantity FROM Products";
+$q  ="SELECT COUNT(*) as total FROM Products";
 
 if (isset($quantity)) {
    $query .= " WHERE quantity <= :q";
    $params[":q"] = $quantity;
-
+   $q  = "SELECT COUNT(*) as total FROM Products WHERE quantity <= :q";
 }
 
 
+$query .= " LIMIT :offset, :count";
 
-
+paginate($q, $params, $per_page);
 
 $stmt = $db->prepare($query);
-
+$stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+$stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
 foreach ($params as $key=>$val){
   $stmt->bindValue($key, $val);
 }
@@ -49,7 +52,7 @@ if ($r) {
 ?>
 
   <form method="POST" style="float: right; margin-top: 3em; margin-right: 2em;" id = "form1">
-      <label for="input">quantity check</label>
+      <label for="input">Quantity Check</label>
       <input type="input" name="quantity" class="form-control" id="quantity" aria-describedby="emailHelp" required>
       <button style= "margin-right: 2em;"type="submit" name="quantitycheck" value="quantitycheck"  class="btn btn-primary">submit</button>
   </form>
@@ -58,7 +61,7 @@ if ($r) {
 
 
 
-<h1>PRODUCTS</h1>
+<h1 style="margin-left: 3em;" >PRODUCTS</h1>
 <div class="row" style= "margin-left: 4em;">
 <?php if (count($results) > 0): ?>
     <?php foreach ($results as $r): ?>
@@ -84,8 +87,9 @@ if ($r) {
         <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
             <a class="page-link" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
         </li>
-        
-        
+        <?php for($i = 0; $i < $total_pages; $i++):?>
+            <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a></li>
+        <?php endfor; ?>
         <li class="page-item <?php echo ($page) >= $total_pages?"disabled":"";?>">
             <a class="page-link" href="?page=<?php echo $page+1;?>">Next</a>
         </li>

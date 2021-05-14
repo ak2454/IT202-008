@@ -2,11 +2,11 @@
 /*put this at the bottom of the page so any templates
  populate the flash variable and then display at the proper timing*/
 ?>
-<div class="container" id="flash">
-    <?php $messages = getMessages(); ?>
+<div class="container" id="flash" style="margin-top: 3em">
+    <?php $messages = getMessages();?>
     <?php if ($messages): ?>
         <?php foreach ($messages as $msg): ?>
-            <div class="row bg-secondary justify-content-center">
+            <div class="alert alert-dark" role="alert">
                 <p><?php echo $msg; ?></p>
             </div>
         <?php endforeach; ?>

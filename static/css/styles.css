@@ -1,4 +1,55 @@
-body {
-    background-color: #f7f3e9;
+body { /* everything */
+    font-family: arial;
+    font-size: 1.0em;
+    text-align: center;
+    display: block;
+    margin: 0 auto 0 auto;
+    background-color: #ff0000
+
+}
+.bg-dark {
+background-color: #4c885b!important;
 }
 
+.nav > i{
+	color: white;
+}
+.signup-form:hover{
+  color: black;
+}
+
+
+ul[class="nav"]{ /* nav class */
+
+    list-style-type: none;
+    overflow: hidden;
+    background-color: #2dafc9;
+    opacity: 1.0; /* play with this later*/
+    padding: 0;
+}
+
+.nav > li {
+    display: inline-block;
+    text-align:center;
+
+}
+
+
+
+.nav > li a {
+
+    display: inline-block;
+    color: #ffffff;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+
+}
+
+.nav > li a:hover {
+    background-color: #3898ba;
+
+}
+label {
+        display: block;
+}

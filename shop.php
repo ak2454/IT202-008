@@ -6,24 +6,16 @@ $results = [];
 $cat = 0;
 $db = getDB();
 $per_page = 10;
-$offset = 0;
-
-
 
 $sort = extractData("sort");
 $rating = extractData("rating");
 $category = extractData ("category");
-$query = "SELECT id,name, price, description FROM Products WHERE quantity > 0 AND visibility = 1";
+$query = "SELECT id,name, price, description, (SELECT AVG(rating) from Ratings where product_id = Products.id GROUP BY product_id) as ratings FROM Products WHERE quantity > 0 and visibility = 1";
 $q = "SELECT count(*) as total FROM Products";
 
   if(isset($category)){
-    if ($category != "All"){
-	$query .= " AND category = '$category'";
-    	$q = "SELECT count(*) as total FROM Products WHERE category = '$category'";
-    }
-    else{
-    	
-    }
+    $query .= " AND category = '$category'";
+    $q = "SELECT count(*) as total FROM Products WHERE category = '$category'";
   }
 
 
@@ -35,7 +27,7 @@ $q = "SELECT count(*) as total FROM Products";
     $query .= " LIMIT :offset, :count";
 
 
-
+    paginate($q, [], $per_page);
 
     $stmt = $db->prepare($query);
     $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
@@ -90,7 +82,7 @@ if ($r) {
 
 
   <div>
-  <form method="POST" style="float: right; margin-top: 3em; display: inline-flex; margin-right: 2em;" id = "form1">
+  <form method="POST" style="float: right; margin-top: 1em; display: inline-flex; margin-right: 2em;" id = "form1">
 
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       sort by
@@ -117,7 +109,7 @@ if ($r) {
   </div>
   </form>
   </div>
-<h1>PRODUCTS</h1>
+<h1 style="margin-left: 2em;">PRODUCTS</h1>
 <div class="row" style= "margin-left: 4em;">
 <?php if (count($results) > 0): ?>
     <?php foreach ($results as $r): ?>
@@ -129,6 +121,9 @@ if ($r) {
           <?php if (is_logged_in()): ?>
             <button form = "form1" type="button" onclick="addToCart(<?php echo $r["id"];?>);" class="btn btn-primary btn-lg">Add to Cart</button>
           <?php endif;?>
+          <?php if (has_role("Admin")): ?>
+            <a href="edit_product.php?id=<?php safer_echo($r['id']); ?>" class="btn btn-primary">Edit</a>
+          <?php endif; ?>
           </div>
         </div>
 <?php endforeach; ?>
@@ -142,7 +137,7 @@ if ($r) {
         <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
             <a class="page-link" href="?page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
         </li>
-        <?php for($i = 0; $i < 0; $i++):?>
+        <?php for($i = 0; $i < $total_pages; $i++):?>
             <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="?page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a></li>
         <?php endfor; ?>
         <li class="page-item <?php echo ($page) >= $total_pages?"disabled":"";?>">
@@ -152,5 +147,3 @@ if ($r) {
 </nav>
 
 <?php require_once(__DIR__ . "/partials/flash.php"); ?>
-
-

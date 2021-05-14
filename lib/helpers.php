@@ -3,39 +3,10 @@ session_start();//we can start our session here so we don't need to worry about 
 require_once(__DIR__ . "/db.php");
 //this file will contain any helpful functions we create
 //I have provided two for you
-
-
-
-function extractData($key){
-  if(isset($_POST[$key])){
-    $output = $_POST[$key];
-      $_SESSION[$key] =$output;
-
-  }
-  elseif (isset($_SESSION[$key])){
-    $output = $_SESSION[$key];
-
-  }
-  else{
-    $output = null;
-
-  }
-  return $output;
-}
-
-
-
 function is_logged_in() {
     return isset($_SESSION["user"]);
 }
 
-function safe_get($arr, $key, $default="") {
-
-	if (is_arrray($arr) && isset($arr[$key])) {
-		return $arr[$key];
-	}
-	return $default;
-}
 function has_role($role) {
     if (is_logged_in() && isset($_SESSION["user"]["roles"])) {
         foreach ($_SESSION["user"]["roles"] as $r) {
@@ -45,20 +16,6 @@ function has_role($role) {
         }
     }
     return false;
-}
-
-function getURL($path) {
-    if (substr($path, 0, 1) == "/") {
-        return $path;
-    }
-    return $_SERVER["CONTEXT_PREFIX"] . "/IT202/project/$path";
-}
-
-function getBalance() {
-    if (is_logged_in() && isset($_SESSION["user"]["balance"])) {
-        return $_SESSION["user"]["balance"];
-    }
-    return 0;
 }
 
 function get_username() {
@@ -113,24 +70,72 @@ function getMessages() {
 
 //end flash
 
-function getState($n) {
-    switch ($n) {
-        case 0:
-            echo "Incubating";
-            break;
-        case 1:
-            echo "Hatching";
-            break;
-        case 2:
-            echo "Hatched";
-            break;
-        case 3:
-            echo "Expired";
-            break;
-        default:
-            echo "Unsupported state: " . safer_echo($n);
-            break;
+function getURL($path) {
+    if (substr($path, 0, 1) == "/") {
+        return $path;
     }
+    return $_SERVER["CONTEXT_PREFIX"] . "/IT202/project/$path";
 }
 
+
+function paginate($query, $params = [], $per_page = 10) {
+    global $page;
+    if (isset($_GET["page"])) {
+        try {
+            $page = (int)$_GET["page"];
+        }
+        catch (Exception $e) {
+            $page = 1;
+        }
+    }
+    else {
+        $page = 1;
+    }
+    $db = getDB();
+    $stmt = $db->prepare($query);
+    $stmt->execute($params);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $total = 0;
+    if ($result) {
+        $total = (int)$result["total"];
+    }
+    global $total_pages;
+    $total_pages = ceil($total / $per_page);
+    global $offset;
+    $offset = ($page - 1) * $per_page;
+}
+
+function extractData($key){
+  if(isset($_POST[$key])){
+    $output = $_POST[$key];
+      $_SESSION[$key] =$output;
+
+  }
+  elseif (isset($_SESSION[$key])){
+    $output = $_SESSION[$key];
+
+  }
+  else{
+    $output = null;
+
+  }
+  return $output;
+}
+
+
+
+
+
+
+function calcPrice($id, $quantity){
+
+  $db = getDB();
+  $stmt = $db->prepare("SELECT price FROM Products where id = :id");
+  $r = $stmt->execute([":id" => $id]);
+  $product = $stmt->fetch(PDO::FETCH_ASSOC);
+  $price = $product["price"] * $quantity;
+
+
+    return $price;
+}
 ?>

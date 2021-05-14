@@ -143,9 +143,8 @@ if ($isValid){
 
   }
   else{ //if quantitycheck is false
-    flash ("Error in Item: $name, desired Quantity is more than current stock. Please Update to continue");
+    flash ("for item: $name, the desired quantity should be less that $originalQ since that is what we have in stock");
   }
-
 
 }else{ //if missing fields
   flash("missing fields, please fill out form");
@@ -155,24 +154,24 @@ if ($isValid){
 
  ?>
 
- <form method = "POST">
+ <form method="POST">
    <div class="form-group">
-     <h1> ADDRESS </h1>
-     <label for="inputAddress">Address</label>
-     <input type="text" name="address" class="form-control" id="inputAddress" placeholder="1234 Main St" required>
+     <h1> Shipping Information </h1>
+     <label style="margin-left:20;" for="inputAddress">Address</label>
+     <input type="text" name="address" style="width:700" class="form-control" id="inputAddress" placeholder="1234 Main St" required>
    </div>
    <div class="form-group">
-     <label for="inputAddress2">Address 2</label>
-     <input type="text" name="address2" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+     <label style="margin-left:20;" for="inputAddress2">Address 2</label>
+     <input type="text" name="address2" style="width:700" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
    </div>
-   <div class="form-row">
-     <div class="form-group col-md-6">
-       <label for="inputCity">City</label>
-       <input type="text" name="city" class="form-control" id="inputCity" required>
+
+     <div class="form-group">
+       <label style="margin-left:20;" for="inputCity">City</label>
+       <input type="text" name="city" style="width:700" class="form-control" id="inputCity" required>
      </div>
-     <div class="form-group col-md-4">
-       <label for="inputState">State</label>
-       <select  name = "state" id="inputState" class="form-control" required>
+     <div class="form-group">
+       <label style="margin-left:20;" for="inputState">State</label>
+       <select  name = "state" id="inputState" style="width:700" class="form-control" required>
          <option value="AL">Alabama</option>
        	<option value="AK">Alaska</option>
        	<option value="AZ">Arizona</option>
@@ -226,22 +225,21 @@ if ($isValid){
        	<option value="WY">Wyoming</option>
        </select>
      </div>
-     <div class="form-group col-md-2">
-       <label for="inputZip">Zip</label>
-       <input type="text" name="zip" class="form-control" id="inputZip" required>
+     <div class="form-group">
+       <label style="margin-left:20;" for="inputZip">Zip Code</label>
+       <input type="text" name="zip" style="width:700" class="form-control" id="inputZip" required>
      </div>
-   </div>
-   <h1> PAYMENT METHOD </h1>
+   
+   <h1 style="margin-left:20;" > PAYMENT METHOD </h1>
    <div class="form-group">
-     <select name = "payment" id="PAYMENT" class="form-control" required>
+     <select name = "payment" id="PAYMENT" style="width:700" class="form-control" required>
        <option value="visa">Visa</option>
        <option value="discover">Discover</option>
        <option value="mastercard">MasterCard</option>
        <option value="AMEX">AMEX</option>
-       <option value="cash">Cash</option>
      </select>
    </div>
-   <button class="btn btn-secondary btn-lg btn-block" type="submit" name="place" value="place">Place Order</button>
+   <button class="btn btn-secondary btn-lg btn-block" type="submit" style="width:700" name="place" value="place">Place Order</button>
  </form>
 
  <?php require_once(__DIR__ . "/partials/flash.php"); ?>

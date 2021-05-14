@@ -7,23 +7,23 @@ if (!has_role("Admin")) {
 }
 ?>
 
-<form method="POST" style = "margin-left: 250;">
+<form method="POST" style = "">
 	<label>Name</label>
 	<input name="name" placeholder="name"/>
 
-  <label>quantity</label>
+  <label>Quantity</label>
 	<input type="number" min="0" name="quantity"/>
 
-	<label>price</label>
-	<input type="number" min="1" name="price"/>
+	<label>Price</label>
+	<input type="number" step="0.01" min="1" name="price"/>
 
-	<label>description</label>
+	<label>Description</label>
 	<input type="TEXT"  name="description"/>
 
-  <label>category</label>
+  <label>Category</label>
 	<input type="TEXT"  name="category"/>
 
-  <label>visibility (1-> visibile   0-> not visible)</label>
+  <label>Visibility (1-> visibile   0-> not visible)</label>
 	<input type="number" min="0" max= "1" name="visibility"/>
 
 

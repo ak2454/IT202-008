@@ -50,10 +50,10 @@ $per_page = 10;
 $q = " SELECT COUNT(*) as total from Ratings where product_id = :id";
 $p = [];
 $p[":id"] = $product_id;
-//paginate($q, $p, $per_page);
+paginate($q, $p, $per_page);
 //grabing all my reviews
-$stmt = $db->prepare("SELECT Ratings.comment,Ratings.rating, Ratings.created, Ratings.user_id, Users.username FROM Ratings JOIN Users on Ratings.user_id = Users.id WHERE Ratings.product_id = :id LIMIT :count");
-//$stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+$stmt = $db->prepare("SELECT Ratings.comment,Ratings.rating, Ratings.created, Ratings.user_id, Users.username FROM Ratings JOIN Users on Ratings.user_id = Users.id WHERE Ratings.product_id = :id LIMIT :offset, :count");
+$stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
 $stmt->bindValue(":count", $per_page, PDO::PARAM_INT);
 $stmt->bindValue(":id", $product_id, PDO::PARAM_INT);
 $r = $stmt->execute();
@@ -95,7 +95,6 @@ $rating = $stmt->fetchall(PDO::FETCH_ASSOC);
 
     <?php if (isset($result) && !empty($result)): ?>
           <div class="card">
-
             <div class="card-body">
               <h5 class="card-title"> <?php safer_echo($result["name"]); ?></h5>
               <p class="card-text">$<?php safer_echo($result["price"])?></p>
@@ -109,10 +108,50 @@ $rating = $stmt->fetchall(PDO::FETCH_ASSOC);
             <form method="POST">
               <div class="card">
                 <div class="card-body">
+                  <h5 class="card-title">already bought it? Review our Product!</h5>
+                  <label for="exampleFormControlInput1" class="form-label"></label>
+                  <input type="text" name="review" class="form-control" id="exampleFormControlInput1" placeholder="amazing product!" required>
+                  <select class="form-control" id="quantity" name="stars" style= "width: 50;">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
                   </select>
+                  <button type="submit" name = "reviewButton" class="btn btn-primary btn-lg">submit review</button>
                 <div>
               </div>
             </form>
+
+
+            <h1> PRODUCT REVIEWS </h1>
+
+          <?php foreach ($rating as $r):?>
+            <div class="card-group">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"><a href=" profile.php?id= <?php echo $r["user_id"];?>"><?php echo $r["username"];?></a></h5>
+
+              <p class="card-text"><?php echo $r["rating"];?>/5</p>
+              <p class="card-text"><?php echo $r["comment"];?></p>
+              <p class="card-text"><small class="text-muted"><?php echo $r["created"];?></small></p>
+            </div>
+          </div>
+          </div>
+        <?php endforeach ?>
+        <nav aria-label="bla">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <?php echo ($page-1) < 1?"disabled":"";?>">
+                    <a class="page-link" href="?id=<?php echo $product_id;?>&page=<?php echo $page-1;?>" tabindex="-1">Previous</a>
+                </li>
+                <?php for($i = 0; $i < $total_pages; $i++):?>
+                    <li class="page-item <?php echo ($page-1) == $i?"active":"";?>"><a class="page-link" href="?id=<?php echo $product_id;?>&page=<?php echo ($i+1);?>"><?php echo ($i+1);?></a></li>
+                <?php endfor; ?>
+                <li class="page-item <?php echo ($page) >= $total_pages?"disabled":"";?>">
+                    <a class="page-link" href="?id=<?php echo $product_id;?>&page=<?php echo $page+1;?>">Next</a>
+                </li>
+            </ul>
+        </nav>
 
 
 
