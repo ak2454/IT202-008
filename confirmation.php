@@ -6,7 +6,7 @@ if (!is_logged_in()) {
     die(header("Location: login.php"));
 }
 ?>
-<h1> YOURE ORDER HAS BEEN PLACED! </h1>
+<h1> YOUR ORDER HAS BEEN PLACED! </h1>
 
 <?php
 $db = getDB();
